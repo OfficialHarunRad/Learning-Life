@@ -1,16 +1,1 @@
-<<<<<<< HEAD
 @import "tailwindcss";
-
-.SkillTreeNode::before {
-  content: "";
-  position: absolute;
-  top: -20px;
-  left: 50%;
-  width: 2px;
-  height: 20px;
-  background-color: #4ade80; /* green line */
-  transform: translateX(-50%);
-}
-=======
-@import 'tailwindcss';
->>>>>>> 7c66dd37e3132c4c1edc0e10813604c195f492e9
