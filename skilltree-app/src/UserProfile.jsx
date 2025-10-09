@@ -1,18 +1,9 @@
 import React, { useState } from "react";
 
-export function UserProfile() {
-  //Usestate to manage user data
-  const [user, setUser] = useState({
-    name: "HarunRad",
-    level: 1,
-    xp: 0,
-    skills: [{ skillPoints: 0, skillName: "JavaScript" }],
-  });
-
-  // New state to manage level-up status
+export function UserProfile({ user, setUser }) {
   const [leveledUp, setLeveledUp] = useState(false);
+  const [selectedSkill, setSelectedSkill] = useState("");
 
-  // Function to handle leveling up
   const levelUp = () => {
     if (user.xp >= 100) {
       setUser((prevUser) => ({
@@ -20,26 +11,21 @@ export function UserProfile() {
         level: prevUser.level + 1,
         xp: 0,
       }));
-      setLeveledUp(true); // ✅ show the skill-selection section
+      setLeveledUp(true);
     }
   };
 
-  // Function to add XP
   const addXP = () => {
     setUser((prevUser) => {
       const newXP = prevUser.xp + 10;
       const updatedUser = { ...prevUser, xp: newXP };
       if (newXP >= 100) {
-        // call levelUp inside here
         setTimeout(() => levelUp(), 0);
       }
       return updatedUser;
     });
   };
 
-  const [selectedSkill, setSelectedSkill] = useState("");
-
-  // Function to add skill points
   const addSkillPoint = (skillName) => {
     setUser((prevUser) => ({
       ...prevUser,
@@ -64,21 +50,29 @@ export function UserProfile() {
       <p>XP: {user.xp}</p>
 
       <h3>Skills:</h3>
-      <ul>
-        {user.skills.map((skill, index) => (
-          <li key={index}>
-            {skill.skillName}: {skill.skillPoints} points
-          </li>
-        ))}
-      </ul>
+      {Object.entries(user.skills).map(([category, skills]) => (
+        <div key={category} className="skill-category">
+          {/* .slice to extract skills array */}
+          <h4>{category.charAt(0).toUpperCase() + category.slice(1)}</h4>
+          <ul>
+            {skills.length > 0 ? (
+              skills.map((skill, index) => (
+                <li key={index}>
+                  {skill.skillName}: {skill.skillPoints} points
+                </li>
+              ))
+            ) : (
+              <li>No skills yet.</li>
+            )}
+          </ul>
+        </div>
+      ))}
 
       <button onClick={addXP}>Gain 10 XP</button>
 
       {leveledUp && (
         <div className="skill-selection">
           <h3>🎉 You leveled up! Choose a skill to upgrade:</h3>
-
-          {/* controlled dropdown */}
           <select
             className="skill-dropdown"
             value={selectedSkill}
@@ -91,7 +85,6 @@ export function UserProfile() {
               </option>
             ))}
           </select>
-
           <button
             onClick={() => {
               if (selectedSkill) {
